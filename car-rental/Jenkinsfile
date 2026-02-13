@@ -9,7 +9,6 @@ pipeline {
         IMAGE_TAG = "${BUILD_NUMBER}"
         EC2_HOST = 'ec2-user@13.62.46.99'
         EC2_KEY = credentials('ec2-key')
-        AWS_CREDENTIALS = credentials('aws-credentials')
         DOCKER_COMPOSE_PATH = '/home/ec2-user/car-rental'
     }
 
@@ -47,10 +46,6 @@ pipeline {
                 script {
                     echo '========== Pushing images to ECR =========='
                     sh '''
-                        # Configure AWS credentials
-                        export AWS_ACCESS_KEY_ID=${AWS_CREDENTIALS_USR}
-                        export AWS_SECRET_ACCESS_KEY=${AWS_CREDENTIALS_PSW}
-                        
                         # Login to ECR
                         aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
                         
@@ -77,10 +72,6 @@ pipeline {
                         scp -i ${EC2_KEY} -o StrictHostKeyChecking=no \
                             Docker-car-rental/car-rental/docker-compose.yml \
                             ${EC2_HOST}:${DOCKER_COMPOSE_PATH}/docker-compose.yml
-                        
-                        # Prepare .env file content
-                        export AWS_ACCESS_KEY_ID=${AWS_CREDENTIALS_USR}
-                        export AWS_SECRET_ACCESS_KEY=${AWS_CREDENTIALS_PSW}
                         
                         # Deploy via SSH
                         ssh -i ${EC2_KEY} -o StrictHostKeyChecking=no ${EC2_HOST} << 'EOSSH'
@@ -134,9 +125,6 @@ EOSSH
     }
 
     post {
-        always {
-            cleanWs()
-        }
         success {
             echo '✅ Pipeline completed successfully!'
         }
