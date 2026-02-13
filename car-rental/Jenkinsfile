@@ -43,7 +43,13 @@ pipeline {
                 script {
                     echo '========== Pushing images to ECR =========='
                     sh '''
-                        # Login to ECR
+                        # Install AWS CLI if not available
+                        if ! command -v aws &> /dev/null; then
+                            echo "Installing AWS CLI..."
+                            apt-get update && apt-get install -y awscli
+                        fi
+                        
+                        # Login to ECR with stored credentials
                         aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
                         
                         # Push frontend images
@@ -54,7 +60,7 @@ pipeline {
                         docker push ${ECR_REGISTRY}/${ECR_REPO_BACKEND}:${IMAGE_TAG}
                         docker push ${ECR_REGISTRY}/${ECR_REPO_BACKEND}:latest
                         
-                        echo "Images pushed to ECR successfully!"
+                        echo "✅ Images pushed to ECR successfully!"
                     '''
                 }
             }
