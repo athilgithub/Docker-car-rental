@@ -1,0 +1,363 @@
+/* Car Availability Styles */
+.availability-check {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+}
+
+/* Availability Warning (when check fails) */
+.availability-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border: 2px solid #ffc107;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.warning-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.warning-content {
+  flex: 1;
+  color: #856404;
+}
+
+.warning-content strong {
+  display: block;
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+  color: #664d03;
+}
+
+.warning-content p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.availability-check.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+}
+
+.availability-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #e9ecef;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Availability Badge Styles */
+.availability-badge {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.availability-badge.available {
+  background: linear-gradient(135deg, #d4edda, #a3d9a5);
+  border: 2px solid #28a745;
+  color: #155724;
+}
+
+.availability-badge.limited {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border: 2px solid #ffc107;
+  color: #856404;
+  animation: pulse-warning 2s infinite;
+}
+
+.availability-badge.unavailable {
+  background: linear-gradient(135deg, #f8d7da, #f5c2c7);
+  border: 2px solid #dc3545;
+  color: #721c24;
+}
+
+@keyframes pulse-warning {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.6);
+  }
+}
+
+.badge-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.badge-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.badge-text {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.badge-description {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  font-weight: 500;
+}
+
+/* Conflicting Bookings Section */
+.conflicting-bookings {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  border-left: 4px solid #dc3545;
+}
+
+.conflicting-bookings h4 {
+  margin: 0 0 0.75rem 0;
+  color: #721c24;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.conflicting-bookings ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.conflicting-bookings li {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: #f8d7da;
+  border-radius: 6px;
+  color: #721c24;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.conflicting-bookings li:before {
+  content: '📅';
+  font-size: 1rem;
+}
+
+/* Alternative Options Section */
+.alternative-options {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  border-radius: 8px;
+  text-align: center;
+  border: 2px dashed #2196f3;
+}
+
+.alternative-options p {
+  margin: 0 0 1rem 0;
+  color: #0d47a1;
+  font-weight: 500;
+}
+
+.btn-alternative {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #2196f3, #1976d2);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.btn-alternative:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+}
+
+/* Availability Status Indicator (for car cards) */
+.availability-indicator {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+.availability-indicator.available {
+  background: #28a745;
+  color: white;
+}
+
+.availability-indicator.limited {
+  background: #ffc107;
+  color: #212529;
+}
+
+.availability-indicator.unavailable {
+  background: #dc3545;
+  color: white;
+}
+
+/* Inventory Counter */
+.inventory-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  font-weight: 600;
+  color: #495057;
+}
+
+.inventory-counter .counter-icon {
+  font-size: 1.2rem;
+}
+
+.inventory-counter .counter-value {
+  font-size: 1rem;
+}
+
+/* Waitlist Section */
+.waitlist-section {
+  margin-top: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+  border-radius: 12px;
+  border: 2px solid #ff9800;
+}
+
+.waitlist-section h4 {
+  margin: 0 0 0.5rem 0;
+  color: #e65100;
+  font-size: 1.1rem;
+}
+
+.waitlist-section p {
+  margin: 0 0 1rem 0;
+  color: #ef6c00;
+  font-size: 0.95rem;
+}
+
+.waitlist-form {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.waitlist-form input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #ff9800;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.waitlist-form button {
+  padding: 0.75rem 1.5rem;
+  background: #ff9800;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.waitlist-form button:hover {
+  background: #f57c00;
+  transform: translateY(-1px);
+}
+
+.waitlist-success {
+  padding: 1rem;
+  background: #d4edda;
+  border: 2px solid #28a745;
+  border-radius: 8px;
+  color: #155724;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .availability-badge {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .badge-icon {
+    font-size: 1.5rem;
+  }
+
+  .badge-text {
+    font-size: 1rem;
+  }
+
+  .badge-description {
+    font-size: 0.85rem;
+  }
+
+  .waitlist-form {
+    flex-direction: column;
+  }
+
+  .waitlist-form input,
+  .waitlist-form button {
+    width: 100%;
+  }
+
+  .availability-indicator {
+    top: 0.5rem;
+    right: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .availability-check {
+    padding: 0.75rem;
+  }
+
+  .conflicting-bookings,
+  .alternative-options,
+  .waitlist-section {
+    padding: 0.75rem;
+  }
+
+  .badge-text {
+    font-size: 0.95rem;
+  }
+}

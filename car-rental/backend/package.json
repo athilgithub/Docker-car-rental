@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node server.cjs",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "vite build",
+    "start": "node server.cjs",
+    "serve:dist": "serve -s dist -l tcp:$PORT"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "google-auth-library": "^10.3.0",
+    "mongoose": "^8.18.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^7.0.10",
+    "path": "^0.12.7",
+    "razorpay": "^2.9.6",
+    "serve": "^14.2.0"
+  }
+}
