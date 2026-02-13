@@ -7,9 +7,6 @@ pipeline {
         ECR_REPO_FRONTEND = 'car-rental-frontend'
         ECR_REPO_BACKEND = 'car-rental-backend'
         IMAGE_TAG = "${BUILD_NUMBER}"
-        EC2_HOST = 'ec2-user@13.62.46.99'
-        EC2_KEY = credentials('ec2-key')
-        DOCKER_COMPOSE_PATH = '/home/ec2-user/car-rental'
     }
 
     stages {
@@ -58,66 +55,6 @@ pipeline {
                         docker push ${ECR_REGISTRY}/${ECR_REPO_BACKEND}:latest
                         
                         echo "Images pushed to ECR successfully!"
-                    '''
-                }
-            }
-        }
-
-        stage('Deploy to EC2') {
-            steps {
-                script {
-                    echo '========== Deploying to EC2 =========='
-                    sh '''
-                        # Copy docker-compose file to EC2
-                        scp -i ${EC2_KEY} -o StrictHostKeyChecking=no \
-                            Docker-car-rental/car-rental/docker-compose.yml \
-                            ${EC2_HOST}:${DOCKER_COMPOSE_PATH}/docker-compose.yml
-                        
-                        # Deploy via SSH
-                        ssh -i ${EC2_KEY} -o StrictHostKeyChecking=no ${EC2_HOST} << 'EOSSH'
-                            # Create deployment directory
-                            mkdir -p ${DOCKER_COMPOSE_PATH}
-                            cd ${DOCKER_COMPOSE_PATH}
-                            
-                            # Login to ECR
-                            aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin ${ECR_REGISTRY}
-                            
-                            # Pull latest images
-                            docker-compose pull
-                            
-                            # Stop old containers safely
-                            docker-compose down || true
-                            
-                            # Start new containers
-                            docker-compose up -d
-                            
-                            # Wait for services to be ready
-                            sleep 10
-                            
-                            echo "✅ Deployment to EC2 completed!"
-EOSSH
-                    '''
-                }
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                script {
-                    echo '========== Verifying Deployment =========='
-                    sh '''
-                        ssh -i ${EC2_KEY} -o StrictHostKeyChecking=no ${EC2_HOST} << 'EOSSH'
-                            echo "Running containers:"
-                            docker ps
-                            
-                            echo ""
-                            echo "Container logs:"
-                            docker logs car-rental-frontend --tail 10
-                            
-                            echo ""
-                            echo "✅ Frontend URL: http://13.62.46.99"
-                            echo "✅ Backend API: http://13.62.46.99:3001"
-EOSSH
                     '''
                 }
             }
