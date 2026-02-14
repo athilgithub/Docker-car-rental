@@ -1,83 +1,35 @@
 pipeline {
     agent any
 
-    environment {
-        AWS_REGION = 'eu-north-1'
-        ECR_REGISTRY = '653986727715.dkr.ecr.eu-north-1.amazonaws.com'
-        ECR_REPO_FRONTEND = 'car-rental-frontend'
-        ECR_REPO_BACKEND = 'car-rental-backend'
-        IMAGE_TAG = "${BUILD_NUMBER}"
-        AWS_CREDS = credentials('aws-credentials')
-    }
-
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                script {
-                    echo '========== Checking out code =========='
-                    checkout scm
-                }
+                checkout scm
+            }
+        }
+
+        stage('Docker Version') {
+            steps {
+                sh 'docker --version'
             }
         }
 
         stage('Build Docker Images') {
             steps {
-                script {
-                    echo '========== Building Docker Images =========='
-                    sh '''
-                        cd car-rental
-                        docker build -t ${ECR_REGISTRY}/${ECR_REPO_FRONTEND}:${IMAGE_TAG} .
-                        docker build -t ${ECR_REGISTRY}/${ECR_REPO_BACKEND}:${IMAGE_TAG} ./backend
-                        
-                        # Tag as latest
-                        docker tag ${ECR_REGISTRY}/${ECR_REPO_FRONTEND}:${IMAGE_TAG} ${ECR_REGISTRY}/${ECR_REPO_FRONTEND}:latest
-                        docker tag ${ECR_REGISTRY}/${ECR_REPO_BACKEND}:${IMAGE_TAG} ${ECR_REGISTRY}/${ECR_REPO_BACKEND}:latest
-                        
-                        echo "Images built successfully!"
-                    '''
-                }
+                sh 'docker compose build'
             }
         }
 
-        stage('Push to ECR') {
+        stage('Run Containers') {
             steps {
-                script {
-                    echo '========== Pushing images to ECR =========='
-                    sh '''
-                        # Install AWS CLI if not available
-                        if ! command -v aws &> /dev/null; then
-                            echo "Installing AWS CLI..."
-                            apt-get update && apt-get install -y awscli
-                        fi
-                        
-                        # Configure AWS credentials
-                        export AWS_ACCESS_KEY_ID=${AWS_CREDS_USR}
-                        export AWS_SECRET_ACCESS_KEY=${AWS_CREDS_PSW}
-                        
-                        # Login to ECR
-                        aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}
-                        
-                        # Push frontend images
-                        docker push ${ECR_REGISTRY}/${ECR_REPO_FRONTEND}:${IMAGE_TAG}
-                        docker push ${ECR_REGISTRY}/${ECR_REPO_FRONTEND}:latest
-                        
-                        # Push backend images
-                        docker push ${ECR_REGISTRY}/${ECR_REPO_BACKEND}:${IMAGE_TAG}
-                        docker push ${ECR_REGISTRY}/${ECR_REPO_BACKEND}:latest
-                        
-                        echo "✅ Images pushed to ECR successfully!"
-                    '''
-                }
+                sh 'docker compose up -d'
             }
         }
-    }
 
-    post {
-        success {
-            echo '✅ Pipeline completed successfully!'
-        }
-        failure {
-            echo '❌ Pipeline failed! Check logs above.'
+        stage('Verify Containers') {
+            steps {
+                sh 'docker ps'
+            }
         }
     }
 }
